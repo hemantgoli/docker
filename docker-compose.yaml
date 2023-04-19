@@ -1,0 +1,49 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: .
+      #dockerfile: C:\Users\heman\OneDrive\Documents\docker\Dockerfile
+      labels:
+        env: "dev"
+        application: "cicd"
+        department: "mas"
+      shm_size: "3gb"
+    image: jenkins:lts
+    #container_name: jenkins_lts
+    #command: ["mvn","-version"]
+    environment:
+      - JENKINS_HOME=/app/JENKINS_HOME 
+    ports:
+      - "8080:8080"
+    deploy:
+      mode: replicated
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1"
+          memory: 2g
+        reservations:
+          cpus: "0.3"
+          memory: 500m
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 5m
+    volumes:
+      - type: volume
+        source: jenkins_log
+        target: /app/jenkins_log
+      - type: bind
+        source: C:\Users\heman\OneDrive\Documents\docker\JENKINS_HOME
+        target: /app/JENKINS_HOME
+    networks:
+      - sit
+
+networks:
+  sit:
+    name: sit
+    external: true
+volumes:
+  jenkins_log:
