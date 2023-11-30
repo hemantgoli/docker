@@ -2,6 +2,8 @@ FROM ubuntu:latest
 
 WORKDIR /app
 
+CMD echo "welcome to Jenkins"
+
 RUN apt-get update && apt-get upgrade -y
 
 RUN apt-get install maven git openjdk-11-jre wget -y
